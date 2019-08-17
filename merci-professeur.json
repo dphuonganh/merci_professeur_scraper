@@ -1,0 +1,176 @@
+// 20190814185119
+// file:///home/dphuong/dphuong/merci-professeur.json
+
+{
+  "episodes": [
+    {
+      "title": "Valeurs républicaines",
+      "url": "/emissions/episode/merci-professeur-valeurs-republicaines",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832517.jpg",
+      "date": "Mardi 13 août 2019 (redif. du Jeudi 30 novembre 2017)",
+      "duration": "01:49"
+    },
+    {
+      "title": "Trace",
+      "url": "/emissions/episode/merci-professeur-trace",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257520.jpg",
+      "date": "Jeudi 8 août 2019 (redif. du Lundi 24 juin 2019)",
+      "duration": "02:08"
+    },
+    {
+      "title": "Ressusciter",
+      "url": "/emissions/episode/merci-professeur-ressusciter",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257518.jpg",
+      "date": "Mercredi 7 août 2019",
+      "duration": "02:30"
+    },
+    {
+      "title": "Permaculture",
+      "url": "/emissions/episode/merci-professeur-permaculture",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4927553.jpg",
+      "date": "Vendredi 2 août 2019 (redif. du Mercredi 28 février 2018)",
+      "duration": "02:00"
+    },
+    {
+      "title": "On est sur...",
+      "url": "/emissions/episode/merci-professeur-on-est-sur",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832469.jpg",
+      "date": "Vendredi 2 août 2019",
+      "duration": "02:32"
+    },
+    {
+      "title": "Tantôt",
+      "url": "/emissions/episode/merci-professeur-tantot",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257464.jpg",
+      "date": "Mercredi 31 juillet 2019 (redif. du Jeudi 13 juin 2019)",
+      "duration": "02:00"
+    },
+    {
+      "title": "Diesel, gazole et mazout",
+      "url": "/emissions/episode/merci-professeur-diesel-gazole-et-mazout",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4927537.jpg",
+      "date": "Mercredi 31 juillet 2019 (redif. du Vendredi 9 février 2018)",
+      "duration": "02:10"
+    },
+    {
+      "title": "Arcane",
+      "url": "/emissions/episode/merci-professeur-arcane",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5148895.jpg",
+      "date": "Samedi 27 juillet 2019 (redif. du Lundi 22 avril 2019)",
+      "duration": "02:32"
+    },
+    {
+      "title": "Tâcheron",
+      "url": "/emissions/episode/merci-professeur-tacheron",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022492.jpg",
+      "date": "Vendredi 26 juillet 2019 (redif. du Mercredi 12 septembre 2018)",
+      "duration": "02:19"
+    },
+    {
+      "title": "Dépouille",
+      "url": "/emissions/episode/merci-professeur-depouille",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5148869.jpg",
+      "date": "Samedi 20 juillet 2019 (redif. du Dimanche 12 mai 2019)",
+      "duration": "01:39"
+    },
+    {
+      "title": "Ressortissant",
+      "url": "/emissions/episode/merci-professeur-ressortissant",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832481.jpg",
+      "date": "Vendredi 19 juillet 2019 (redif. du Jeudi 9 novembre 2017)",
+      "duration": "02:25"
+    },
+    {
+      "title": "Attendre et espérer",
+      "url": "/emissions/episode/merci-professeur-attendre-et-esperer",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832435.jpg",
+      "date": "Lundi 15 juillet 2019 (redif. du Dimanche 31 décembre 2017)",
+      "duration": "02:38"
+    },
+    {
+      "title": "Cacochyme",
+      "url": "/emissions/episode/merci-professeur-cacochyme",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022452.jpg",
+      "date": "Samedi 13 juillet 2019 (redif. du Samedi 29 décembre 2018)",
+      "duration": "02:27"
+    },
+    {
+      "title": "Camion",
+      "url": "/emissions/episode/merci-professeur-camion",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022416.jpg",
+      "date": "Samedi 13 juillet 2019 (redif. du Mercredi 6 mars 2019)",
+      "duration": "02:16"
+    },
+    {
+      "title": "Fiançailles",
+      "url": "/emissions/episode/merci-professeur-fiancailles",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022464.jpg",
+      "date": "Vendredi 12 juillet 2019 (redif. du Mardi 19 mars 2019)",
+      "duration": "02:26"
+    },
+    {
+      "title": "Dégagisme",
+      "url": "/emissions/episode/merci-professeur-degagisme",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4927533.jpg",
+      "date": "Dimanche 7 juillet 2019 (redif. du Jeudi 21 décembre 2017)",
+      "duration": "02:06"
+    },
+    {
+      "title": "Macaron",
+      "url": "/emissions/episode/merci-professeur-macaron",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257504.jpg",
+      "date": "Samedi 6 juillet 2019",
+      "duration": "03:01"
+    },
+    {
+      "title": "Consonnes troubles",
+      "url": "/emissions/episode/merci-professeur-consonnes-troubles",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832449.jpg",
+      "date": "Vendredi 5 juillet 2019 (redif. du Mercredi 25 avril 2018)",
+      "duration": "02:21"
+    },
+    {
+      "title": "Digital et numérique",
+      "url": "/emissions/episode/merci-professeur-digital-et-numerique",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4927539.jpg",
+      "date": "Jeudi 4 juillet 2019 (redif. du Jeudi 26 octobre 2017)",
+      "duration": "02:04"
+    },
+    {
+      "title": "Bouffon",
+      "url": "/emissions/episode/merci-professeur-bouffon",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4927565.jpg",
+      "date": "Mercredi 3 juillet 2019 (redif. du Jeudi 26 juillet 2018)",
+      "duration": "02:11"
+    },
+    {
+      "title": "Quiconque et n'importe quoi",
+      "url": "/emissions/episode/merci-professeur-quiconque-et-n-importe-quoi",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022434.jpg",
+      "date": "Mardi 2 juillet 2019 (redif. du Mercredi 2 janvier 2019)",
+      "duration": "02:18"
+    },
+    {
+      "title": "Un sujet clivant",
+      "url": "/emissions/episode/merci-professeur-un-sujet-clivant",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257516.jpg",
+      "date": "Lundi 1 juillet 2019",
+      "duration": "02:12"
+    },
+    {
+      "title": "Cécité et aveuglement",
+      "url": "/emissions/episode/merci-professeur-cecite-et-aveuglement",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5148909.jpg",
+      "date": "Dimanche 30 juin 2019",
+      "duration": "02:17"
+    },
+    {
+      "title": "Endroit et lieu",
+      "url": "/emissions/episode/merci-professeur-endroit-et-lieu",
+      "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/5257486.jpg",
+      "date": "Samedi 29 juin 2019 (redif. du Mercredi 5 juin 2019)",
+      "duration": "02:16"
+    }
+  ],
+  "numPages": 26
+}
