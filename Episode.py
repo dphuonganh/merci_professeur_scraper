@@ -1,4 +1,5 @@
 import json;
+
 # Waypoint 1: Write a Python Class Episode
 class Episode: # _ co the gan duoc luc test print title = "a"
     def __init__(self, title, page_url, image_url, broadcasting_date, duration):
@@ -7,6 +8,7 @@ class Episode: # _ co the gan duoc luc test print title = "a"
         self._image_url = image_url
         self._broadcasting_date = broadcasting_date
         self._duration = duration
+        self._episode_id = None
 
     @property
     def title(self):
@@ -25,20 +27,34 @@ class Episode: # _ co the gan duoc luc test print title = "a"
         return self._broadcasting_date
 
     @property
-    def _duration(self):
+    def duration(self):
         return self._duration
 
     @staticmethod
     def from_json(payload):
-        return Episode(payload["title"], payload["url"], payload["image"], payload["date"], payload["duration"])
+        return Episode(payload['title'], payload["url"], payload["image"], payload["date"], payload["duration"])
 
-payload = {
-    "title": "Valeurs républicaines",
-    "url": "/emissions/episode/merci-professeur-valeurs-republicaines",
-    "image": "https://vodhdimg.tv5monde.com/tv5mondeplus/images/4832517.jpg",
-    "date": "Mardi 13 août 2019 (redif. du Jeudi 30 novembre 2017)",
-    "duration": "01:49"
-}
+    # Waypoint 2: Retrieve the Identification of an Episode
+    @staticmethod
+    def __parse_episode_id(url):
+        return url.split('.')[2].split('/')[3]
 
-a = Episode.from_json(payload)
-# Waypoint 2: Retrieve the Identification of an Episode
+    @property
+    def episode_id(self):
+        self._episode_id = self.__parse_episode_id(self._image_url)
+        return self._episode_id
+
+# TEST
+with open('./merci-professeur.json', 'r') as myfile:
+    data = myfile.read()
+payload = json.loads(data)
+payload_0 = payload['episodes'][0]
+a = Episode.from_json(payload_0)
+# print (a.title)
+# print (a.page_url)
+# print (a.image_url)
+# print (a.broadcasting_date)
+# print (a.duration)
+# a.title = 'sth else'
+# print (a.title)
+print (a.episode_id)
