@@ -74,8 +74,14 @@ def read_url(url, maximum_attempt_count=3,
 
 
 def fetch_episodes(url):
-    return (read_url(url))
+    api_data = read_url(url)
+    list_episodes = []
+    for episode in api_data['episodes']:
+        list_episodes.append(Episode.from_json(episode))
+    return list_episodes
 
 
 url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-print(fetch_episodes(url))
+list_episodes = fetch_episodes(url)
+for episode in list_episodes:
+    print(episode.episode_id)
