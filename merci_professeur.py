@@ -40,16 +40,12 @@ class Episode: # _ co the gan duoc luc test print title = "a"
             payload['title'],
             payload['url'],
             payload['image'],
-            payload['date'],  raise Exception('Resource not found/not allowed')
-
-        except requests.exceptions.ConnectionError:
-            time.sleep(sleep_duration_between_attempts)
+            payload['date'],
             payload['duration'])
 
 # Waypoint 2: Retrieve the Identification of an Episode
     @staticmethod
     def __parse_episode_id(url):
-        print(url)
         file_name = os.path.basename(url)
         file_name_without_extension, file_extension = os.path.splitext(file_name)
         return file_name_without_extension
@@ -60,25 +56,21 @@ class Episode: # _ co the gan duoc luc test print title = "a"
             self.__episode_id = self.__parse_episode_id(self.__image_url)
         return self.__episode_id
 
-
-
-
-with open('./merci-professeur.json', 'r') as myfile:
-    data = myfile.read()
-payload = json.loads(data)
-payload_0 = payload['episodes'][0]
-a = Episode.from_json(payload_0)
 # TEST WP1
-# print (a.title)
-# print (a.page_url)
-# print (a.image_url)
-# print (a.broadcasting_date)
-# print (a.duration)
-# a.title = 'sth else'
-# print (a.title)
+# with open('./merci-professeur.json', 'r') as myfile:
+#     data = myfile.read()
+# payload = json.loads(data)
+# payload_0 = payload['episodes'][0]
+# episode = Episode.from_json(payload_0)
+# print (episode.title)
+# print (episode.page_url)
+# print (episode.image_url)
+# print (episode.broadcasting_date)
+# print (episode.duration)
+# episode.title = 'sth else'
 
 # TEST WP2
-# print (a.episode_id)
+# print (episode.episode_id)
 
 
 # Waypoint 3: Fetch the List of Episodes
@@ -90,9 +82,9 @@ def read_url(
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0)\
             Gecko/20100101 Firefox/46.0'}
-            request = requests.get(url, headers=headers)
-            if request.status_code == 200:
-                return request.json()
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return response.json()
 
             raise Exception('Resource not found/not allowed')
 
@@ -101,21 +93,42 @@ def read_url(
             time.sleep(sleep_duration_between_attempts)
             print("Toi thuc day")
 
+        except ValueError:
+            return response.text
 
 
+# Waypoint 4: Fetch the List of all the Episodes (update function from waypoint 3)
 def fetch_episodes(url):
-    data = read_url(url)
+    numPages = read_url(url)["numPages"]
     list_episodes = []
-    for episode in data['episodes']:
-        list_episodes.append(Episode.from_json(episode))
+    for i in range(1,numPages+1,1):
+        final_url_string = url + "?page=" + str(i)
+        data = read_url(final_url_string)
+        for episode in data['episodes']:
+            list_episodes.append(Episode.from_json(episode))
     return list_episodes
 
-episodes = fetch_episodes('http://www.tv5monde.com/emissions/episodes/merci-professeur.json')
+# TEST WP3, WP4
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# for episode in episodes:
+#     print(episode.page_url)
 
+
+# Waypoint 5: Parse Broadcast Data of an Episode
+# Fetch the HTML source page of the episode
+def fetch_episode_html_page(episode):
+    html_content = read_url(episode.page_url)
+    return html_content
+
+# Parse broadcast information about the episode's video
+def parse_broadcast_data_attribute(html_page):
+    pass
 
 url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-list_episodes = fetch_episodes(url)
-for episode in list_episodes:
-    print(episode.episode_id)
-
- requests.get('http://majormode.com/fake')
+episodes = fetch_episodes(url)
+print(len(episodes))
+episode = episodes[0]
+episode_html_page = fetch_episode_html_page(episode)
+print(episode_html_page)
+print([line for line in episode_html_page.split('\n') if 'data-broadcast' in line])
