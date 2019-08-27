@@ -2,9 +2,11 @@
 import json
 import os
 import time
+from urllib.request import urlretrieve
+from urllib.parse import urlparse
+import urllib
 
 import requests
-from urllib.parse import urlparse
 
 # Waypoint 1: Write a Python Class Episode
 class Episode: # _ co the gan duoc luc test print title = "a"
@@ -126,7 +128,8 @@ def fetch_episode_html_page(episode):
 # Parse broadcast information about the episode's video
 def parse_broadcast_data_attribute(html_page):
     # String processing
-    broadcast_line = [line for line in episode_html_page.split('\n') if 'data-broadcast' in line]
+    broadcast_line = [line for line in html_page.split('\n') if \
+    'data-broadcast' in line]
     broadcast_line = broadcast_line[0].split("data-broadcast=\'")[1]
     broadcast_attribute = broadcast_line.split("\' data-duration")[0]
     return json.loads(broadcast_attribute)
@@ -161,8 +164,36 @@ def build_segment_url_pattern(broadcast_data):
 
 
 # Waypoint 7: Download the Video Segments of an Episode
-def download_episode_video_segments():
-    response = requests.get('https://hlstv5mplus-vh.akamaihd.net/i/hls/6e/5022502_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0')
-    return response.json()
-content = download_episode_video_segments()
-print(content)
+def download_episode_video_segments(episode, path=None):
+    try:
+        episode_html_page = fetch_episode_html_page(episode)
+        broadcast_data = parse_broadcast_data_attribute(episode_html_page)
+        index = 1
+        response = 0
+        downloaded_videos = []
+        while response != 404:
+            segment_url=build_segment_url_pattern(broadcast_data).format(index)
+            file_name = 'segment_{}_{}.ts'.format(episode.episode_id, index)
+            response = requests.get(segment_url).status_code
+            urlretrieve(segment_url, file_name)
+            if path is not None:
+                des_path = os.path.expanduser(path) + '/' + file_name
+                os.rename(file_name, des_path)
+                downloaded_videos.append(des_path)
+            else:
+                downloaded_videos.append(os.getcwd() + '/' + file_name)
+            index += 1
+    except urllib.error.HTTPError:
+        return downloaded_videos
+
+# TEST WP7
+url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+episodes = fetch_episodes(url)
+episode = episodes[0]
+# download all videos and save to folder Music
+print(download_episode_video_segments(episode, path='~/Music'))
+
+
+# Waypoint 8: Build the Final Video of an Episode
+def build_episode_video(episode, segment_file_path_names, path=None):
+    pass
