@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import json
 import os
 import time
 
 import requests
+from urllib.parse import urlparse
 
 # Waypoint 1: Write a Python Class Episode
 class Episode: # _ co the gan duoc luc test print title = "a"
@@ -102,7 +104,7 @@ def fetch_episodes(url):
     numPages = read_url(url)["numPages"]
     list_episodes = []
     for i in range(1,numPages+1,1):
-        final_url_string = url + "?page=" + str(i)
+        final_url_string = url + "?page={}".format(i)
         data = read_url(final_url_string)
         for episode in data['episodes']:
             list_episodes.append(Episode.from_json(episode))
@@ -123,12 +125,44 @@ def fetch_episode_html_page(episode):
 
 # Parse broadcast information about the episode's video
 def parse_broadcast_data_attribute(html_page):
-    pass
+    # String processing
+    broadcast_line = [line for line in episode_html_page.split('\n') if 'data-broadcast' in line]
+    broadcast_line = broadcast_line[0].split("data-broadcast=\'")[1]
+    broadcast_attribute = broadcast_line.split("\' data-duration")[0]
+    return json.loads(broadcast_attribute)
 
-url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-episodes = fetch_episodes(url)
-print(len(episodes))
-episode = episodes[0]
-episode_html_page = fetch_episode_html_page(episode)
-print(episode_html_page)
-print([line for line in episode_html_page.split('\n') if 'data-broadcast' in line])
+# TEST WP5
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
+# episode_html_page = fetch_episode_html_page(episode)
+# print(len(episodes))
+# print(episode_html_page)
+# print(parse_broadcast_data_attribute(episode_html_page))
+
+
+# Waypoint 6: Build a URL Pattern of the Video Segments of an Episode
+def build_segment_url_pattern(broadcast_data):
+    broadcast_url = broadcast_data['files'][0]['url']
+    head, sep, tail = broadcast_url.partition('csmil/')
+    segment_url = urlparse(head + sep + 'segment{}_3_av.ts?null=0')
+    return segment_url.geturl()
+
+# TEST WP6
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
+# episode_html_page = fetch_episode_html_page(episode)
+# broadcast_data = parse_broadcast_data_attribute(episode_html_page)
+# print(broadcast_data)
+# segment_url_pattern = build_segment_url_pattern(broadcast_data)
+# print('\n' + segment_url_pattern + '\n')
+# print(segment_url_pattern.format('1'))
+
+
+# Waypoint 7: Download the Video Segments of an Episode
+def download_episode_video_segments():
+    response = requests.get('https://hlstv5mplus-vh.akamaihd.net/i/hls/6e/5022502_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0')
+    return response.json()
+content = download_episode_video_segments()
+print(content)
