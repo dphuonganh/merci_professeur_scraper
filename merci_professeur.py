@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 import json
 import os
@@ -10,13 +11,11 @@ import requests
 
 # Waypoint 1: Write a Python Class Episode
 class Episode: # _ co the gan duoc luc test print title = "a"
-    def __init__(self, title, page_url, image_url, broadcasting_date, duration):
+    def __init__(self, title, page_url, image_url, broadcasting_date ):
         self.__title = title
         self.__page_url = "http://www.tv5monde.com" + page_url
         self.__image_url = image_url
         self.__broadcasting_date = broadcasting_date
-        self.__duration = duration
-        self.__episode_id = None
 
     @property
     def title(self):
@@ -34,18 +33,17 @@ class Episode: # _ co the gan duoc luc test print title = "a"
     def broadcasting_date(self):
         return self.__broadcasting_date
 
-    @property
-    def duration(self):
-        return self.__duration
-
     @staticmethod
     def from_json(payload):
-        return payload and Episode(
-            payload['title'],
-            payload['url'],
-            payload['image'],
-            payload['date'],
-            payload['duration'])
+        title = payload['title']
+        page_url = payload['url']
+        image_url = payload['image']
+        broadcasting_date = payload['date']
+        template_class = Episode(title, page_url, image_url, broadcasting_date)
+        template_class.duration = payload['duration']
+        return template_class
+
+
 
 # Waypoint 2: Retrieve the Identification of an Episode
     @staticmethod
@@ -53,6 +51,7 @@ class Episode: # _ co the gan duoc luc test print title = "a"
         file_name = os.path.basename(url)
         file_name_without_extension, file_extension = os.path.splitext(file_name)
         return file_name_without_extension
+
 
     @property
     def episode_id(self):
@@ -66,12 +65,13 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 # payload = json.loads(data)
 # payload_0 = payload['episodes'][0]
 # episode = Episode.from_json(payload_0)
-# print (episode.title)
+# print(episode.title)
 # print (episode.page_url)
 # print (episode.image_url)
 # print (episode.broadcasting_date)
-# print (episode.duration)
+# print(episode.duration)
 # episode.title = 'sth else'
+# print(episode.title)
 
 # TEST WP2
 # print (episode.episode_id)
@@ -96,7 +96,6 @@ def read_url(
             print("Toi ngu mot chut...")
             time.sleep(sleep_duration_between_attempts)
             print("Toi thuc day")
-
         except ValueError:
             return response.text
 
@@ -108,9 +107,9 @@ def fetch_episodes(url):
     for i in range(1,numPages+1,1):
         final_url_string = url + "?page={}".format(i)
         data = read_url(final_url_string)
-        for episode in data['episodes']:
-            list_episodes.append(Episode.from_json(episode))
-    return list_episodes
+        # for episode in data['episodes']:
+            # list_episodes.append(Episode.from_json(episode))
+    # return list_episodes
 
 # TEST WP3, WP4
 # url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
@@ -120,7 +119,7 @@ def fetch_episodes(url):
 
 
 # Waypoint 5: Parse Broadcast Data of an Episode
-# Fetch the HTML source page of the episode
+# Fetch the HTML source page of the episodeP1
 def fetch_episode_html_page(episode):
     html_content = read_url(episode.page_url)
     return html_content
@@ -187,11 +186,11 @@ def download_episode_video_segments(episode, path=None):
         return downloaded_videos
 
 # TEST WP7
-url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-episodes = fetch_episodes(url)
-episode = episodes[0]
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
 # download all videos and save to folder Music
-print(download_episode_video_segments(episode, path='~/Music'))
+# print(download_episode_video_segments(episode, path='~/Music'))
 
 
 # Waypoint 8: Build the Final Video of an Episode
