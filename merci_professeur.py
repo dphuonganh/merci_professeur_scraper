@@ -55,8 +55,7 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 
     @property
     def episode_id(self):
-        if self.__episode_id is None:
-            self.__episode_id = self.__parse_episode_id(self.__image_url)
+        self.__episode_id = self.__parse_episode_id(self.__image_url)
         return self.__episode_id
 
 # TEST WP1
@@ -80,7 +79,6 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 # Waypoint 3: Fetch the List of Episodes
 def read_url(
         url,
-        maximum_attempt_count=3,
         sleep_duration_between_attempts=10):
     while True:
         try:
@@ -96,6 +94,7 @@ def read_url(
             print("Toi ngu mot chut...")
             time.sleep(sleep_duration_between_attempts)
             print("Toi thuc day")
+        # Waypoint 5:
         except ValueError:
             return response.text
 
@@ -107,9 +106,9 @@ def fetch_episodes(url):
     for i in range(1,numPages+1,1):
         final_url_string = url + "?page={}".format(i)
         data = read_url(final_url_string)
-        # for episode in data['episodes']:
-            # list_episodes.append(Episode.from_json(episode))
-    # return list_episodes
+        for episode in data['episodes']:
+            list_episodes.append(Episode.from_json(episode))
+    return list_episodes
 
 # TEST WP3, WP4
 # url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
@@ -134,10 +133,11 @@ def parse_broadcast_data_attribute(html_page):
     return json.loads(broadcast_attribute)
 
 # TEST WP5
-# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-# episodes = fetch_episodes(url)
-# episode = episodes[0]
-# episode_html_page = fetch_episode_html_page(episode)
+url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+episodes = fetch_episodes(url)
+episode = episodes[0]
+episode_html_page = fetch_episode_html_page(episode)
+print(type(episode_html_page))
 # print(len(episodes))
 # print(episode_html_page)
 # print(parse_broadcast_data_attribute(episode_html_page))
