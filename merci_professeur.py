@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 import json
 import os
@@ -7,11 +6,21 @@ from urllib.request import urlretrieve
 from urllib.parse import urlparse
 import urllib
 
+import re
 import requests
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 # Waypoint 1: Write a Python Class Episode
-class Episode: # _ co the gan duoc luc test print title = "a"
+class Episode:
     def __init__(self, title, page_url, image_url, broadcasting_date ):
+        """
+            @params: title: the title of Episode class (read only)
+                    page_url: URL of the web page dedicated to this Episode (read only)
+                    image_url: URL of the image (read only)
+                    broadcasting_date: The date when this Episode
+                                       has been broadcast (read only)
+            @return: object Episode (print all parameters)
+        """
         self.__title = title
         self.__page_url = "http://www.tv5monde.com" + page_url
         self.__image_url = image_url
@@ -48,6 +57,13 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 # Waypoint 2: Retrieve the Identification of an Episode
     @staticmethod
     def __parse_episode_id(url):
+        """
+            @params: staticmethod __parse_episode_id representing
+                     the Uniform Resource Locator of the image of an episode
+                     property episode_id is __parse_episode_id (read only)
+            @return: the indentification of the Episode (a string)
+                     the indentification of the Episode
+        """
         file_name = os.path.basename(url)
         file_name_without_extension, file_extension = os.path.splitext(file_name)
         return file_name_without_extension
@@ -60,7 +76,11 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 
 # TEST WP1
 # with open('./merci-professeur.json', 'r') as myfile:
-#     data = myfile.read()
+#     data = myfile.read()# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
+# # download all videos and save to folder Music
+# print(download_episode_video_segments(episode, path='~/Music'))
 # payload = json.loads(data)
 # payload_0 = payload['episodes'][0]
 # episode = Episode.from_json(payload_0)
@@ -80,6 +100,17 @@ class Episode: # _ co the gan duoc luc test print title = "a"
 def read_url(
         url,
         sleep_duration_between_attempts=10):
+    """
+        @params: except is the sleep time when the program Connection Error.
+                 read_url function use to edit issues such as: network, machine,
+                                                                   application.
+                 argument url (string)  that performs the HTTP request to the
+                                            specified endpoint.
+        @return: a list of objects Episode
+                 read_url function returns the data read contained in the HTTP
+                 response.
+
+    """
     while True:
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0)\
@@ -99,8 +130,13 @@ def read_url(
             return response.text
 
 
-# Waypoint 4: Fetch the List of all the Episodes (update function from waypoint 3)
+# Waypoint 4: Fetch the List of all the Episodes (update function from waypoint3)
 def fetch_episodes(url):
+    """
+        @params: fetch_episodes allows to get the list of episodes.
+                 url: receive the url http://
+        @returns: returns a page of episodes.
+    """
     numPages = read_url(url)["numPages"]
     list_episodes = []
     for i in range(1,numPages+1,1):
@@ -120,31 +156,47 @@ def fetch_episodes(url):
 # Waypoint 5: Parse Broadcast Data of an Episode
 # Fetch the HTML source page of the episodeP1
 def fetch_episode_html_page(episode):
+    """
+        @param: episode calls the function read_url to read data (bytes)
+                from the specified URL, and converts these data
+                (encoded in UTF-8) to a string
+        @returns: the textual HTML content of the episode page
+                  the scheme, the hostname, the path starts with i//hls,
+                  the TS file name starts with segment, the query.
+    """
     html_content = read_url(episode.page_url)
     return html_content
 
 # Parse broadcast information about the episode's video
 def parse_broadcast_data_attribute(html_page):
+    """
+        @param: html_page takes an argument html_page, a string corresponding
+                to the source code of the HTML page of an episode.
+        @returns: a JSON expression corresponding to the string value of
+                  the attribute data-broadcast.
+    """
     # String processing
-    broadcast_line = [line for line in html_page.split('\n') if \
-    'data-broadcast' in line]
-    broadcast_line = broadcast_line[0].split("data-broadcast=\'")[1]
-    broadcast_attribute = broadcast_line.split("\' data-duration")[0]
-    return json.loads(broadcast_attribute)
+    match_string = re.search(r"data-broadcast='([^']*)'", html_page)
+    broadcast_data = match_string.group(1)
+    return json.loads(broadcast_data)
 
 # TEST WP5
-url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-episodes = fetch_episodes(url)
-episode = episodes[0]
-episode_html_page = fetch_episode_html_page(episode)
-print(type(episode_html_page))
-# print(len(episodes))
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
+# episode_html_page = fetch_episode_html_page(episode)
 # print(episode_html_page)
+# print(len(episodes))
 # print(parse_broadcast_data_attribute(episode_html_page))
 
 
 # Waypoint 6: Build a URL Pattern of the Video Segments of an Episode
 def build_segment_url_pattern(broadcast_data):
+    """
+        @param: broadcast_data representing the broadcast data of an episode
+        @returns: a string representing a URL pattern that references
+                  the video segments of this episode.
+    """
     broadcast_url = broadcast_data['files'][0]['url']
     head, sep, tail = broadcast_url.partition('csmil/')
     segment_url = urlparse(head + sep + 'segment{}_3_av.ts?null=0')
@@ -162,37 +214,71 @@ def build_segment_url_pattern(broadcast_data):
 # print(segment_url_pattern.format('1'))
 
 
-# Waypoint 7: Download the Video Segments of an Episode
-def download_episode_video_segments(episode, path=None):
+# Waypoint 7: Download the Video Segments of an Episodeeeeeeeeeeeeeee
+def download_episode_video_segments(episode, path=None): # create 1 folder path
+    """
+        @param: episode that downloads all the TS video segments of this episode
+        @returns: the absolute path and file names of these video segments
+                  in the order of the segment indices.
+    """
     try:
         episode_html_page = fetch_episode_html_page(episode)
         broadcast_data = parse_broadcast_data_attribute(episode_html_page)
+        segment_pattern = build_segment_url_pattern(broadcast_data)
         index = 1
-        response = 0
+        response = 200 #
         downloaded_videos = []
-        while response != 404:
-            segment_url=build_segment_url_pattern(broadcast_data).format(index)
+        while response == 200: #
+            segment_url = segment_pattern.format(index)
             file_name = 'segment_{}_{}.ts'.format(episode.episode_id, index)
             response = requests.get(segment_url).status_code
-            urlretrieve(segment_url, file_name)
             if path is not None:
-                des_path = os.path.expanduser(path) + '/' + file_name
-                os.rename(file_name, des_path)
-                downloaded_videos.append(des_path)
+                path = os.path.expanduser(path) # not testtttt
+                # check path exists if not create path
+                if not os.path.isdir(path): # not testtttt
+                    os.mkdir(path)
+                des_path = path  + '/' + file_name
             else:
-                downloaded_videos.append(os.getcwd() + '/' + file_name)
+                des_path = os.getcwd() + '/' + file_name
+            urlretrieve(segment_url, des_path)
+            downloaded_videos.append(des_path)
             index += 1
     except urllib.error.HTTPError:
         return downloaded_videos
 
 # TEST WP7
 # url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# print(episode.title)
+# print(eposode.episode_id)
+# print(episode.page_url)
 # episodes = fetch_episodes(url)
 # episode = episodes[0]
 # download all videos and save to folder Music
-# print(download_episode_video_segments(episode, path='~/Music'))
+# print(download_episode_video_segments(episode))
 
 
 # Waypoint 8: Build the Final Video of an Episode
 def build_episode_video(episode, segment_file_path_names, path=None):
-    pass
+    """
+        @param: episode An object Episode.
+                segment_file_path_names a list of strings corresponding to
+                absolute path and file names of TS video segments in
+                the order of their index.
+        @returns: the absolute path and file name of the episode's video.
+    """
+    file_name = episode.episode_id + '.ts'
+    if path is None:
+       path = os.dirname(segment_file_path_names) # change file name dirname
+    file_name = path + '/' + file_name
+    final_clip = concatenate_videoclips([VideoFileClip(segment) for segment \
+    in segment_file_path_names])
+    final_clip.write_videofile(file_name)
+    return file_name
+
+
+# TEST WP8
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
+# segment_file_path_names = download_episode_video_segments(episode, path='~/downloaded_videos')
+# print(build_episode_video(episode, segment_file_path_names))
