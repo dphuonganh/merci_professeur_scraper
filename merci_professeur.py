@@ -145,12 +145,25 @@ def fetch_episodes(url):
                  url: receive the url http://
         @returns: returns a page of episodes.
     """
+
+    # get the number of pages
     numPages = read_url(url)["numPages"]
+
+    # list to contain objects Episode
     list_episodes = []
+
     for i in range(1,numPages+1,1):
+
+        # format url for page
         final_url_string = url + "?page={}".format(i)
+
+        # get json data from url
         data = read_url(final_url_string)
+
+        # get each episode's json data
         for episode in data['episodes']:
+
+            # append to list
             list_episodes.append(Episode.from_json(episode))
     return list_episodes
 
@@ -269,8 +282,16 @@ def download_episode_video_segments(episode, path=None):
             # create final file name to download
             des_path = path  + '/' + file_name
 
-            # download the segment
-            urlretrieve(segment_url, des_path)
+# Waypoint 9: blaaaaaaa blaaaaaaaaa blaaaaaaaaa
+
+            # if video segment already downloaded
+            if os.path.exists(des_path):
+                print(des_path + ' already downloaded')
+
+            # if video segment not downloaded
+            else:
+                # download the segment
+                urlretrieve(segment_url, des_path)
 
             # append to list
             downloaded_videos.append(des_path)
@@ -303,19 +324,37 @@ def build_episode_video(episode, segment_file_path_names, path=None):
                 the order of their index.
         @returns: the absolute path and file name of the episode's video.
     """
+
+    # create file name
     file_name = episode.episode_id + '.ts'
+
+    # check if path is not input, set path = the directory contain first segment
     if path is None:
-       path = os.dirname(segment_file_path_names) # change file name dirname
+       path = os.path.dirname(segment_file_path_names[0])
+
+    # get full input path
+    path = os.path.expanduser(path)
+
+    # if input path is not exists, create path
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    # create final file name combine with path
     file_name = path + '/' + file_name
+
+    # create the full video
     final_clip = concatenate_videoclips([VideoFileClip(segment) for segment \
     in segment_file_path_names])
-    final_clip.write_videofile(file_name)
+
+    # write content of full video to file
+    final_clip.write_videofile(file_name, codec = "libx264")
     return file_name
 
 
 # TEST WP8
-# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-# episodes = fetch_episodes(url)
-# episode = episodes[0]
-# segment_file_path_names = download_episode_video_segments(episode, path='~/downloaded_videos')
-# print(build_episode_video(episode, segment_file_path_names))
+url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+episodes = fetch_episodes(url)
+episode = episodes[0]
+segment_file_path_names = download_episode_video_segments(episode, path='~/Small_videos')
+file_name = build_episode_video(episode, segment_file_path_names, path='~/Big_video')
+print(file_name)
