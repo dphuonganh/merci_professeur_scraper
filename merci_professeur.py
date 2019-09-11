@@ -14,12 +14,13 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 class Episode:
     def __init__(self, title, page_url, image_url, broadcasting_date ):
         """
-            @params: title: the title of Episode class (read only)
-                    page_url: URL of the web page dedicated to this Episode (read only)
-                    image_url: URL of the image (read only)
-                    broadcasting_date: The date when this Episode
-                                       has been broadcast (read only)
-            @return: object Episode (print all parameters)
+            @params: title: the title of Episode class (read only).
+                     page_url: URL of the web page dedicated to this Episode
+                     (read only).
+                     image_url: URL of the image (read only).
+                     broadcasting_date: The date when this Episode
+                                       has been broadcast (read only).
+            @return: object Episode (print all parameters).
         """
         self.__title = title
         self.__page_url = "http://www.tv5monde.com" + page_url
@@ -99,6 +100,7 @@ class Episode:
 # Waypoint 3: Fetch the List of Episodes
 def read_url(
         url,
+        maximum_attempt_count=3,
         sleep_duration_between_attempts=10):
     """
         @params: except is the sleep time when the program Connection Error.
@@ -111,7 +113,8 @@ def read_url(
                  response.
 
     """
-    while True:
+    attempt_count = 0
+    while attempt_count < maximum_attempt_count:
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0)\
             Gecko/20100101 Firefox/46.0'}
@@ -125,9 +128,14 @@ def read_url(
             print("Toi ngu mot chut...")
             time.sleep(sleep_duration_between_attempts)
             print("Toi thuc day")
-        # Waypoint 5:
+            attempt_count += 1
+
+        # Waypoint 5: when read html_page return json so the function raise
+        # ValueError of the html_content, converts return to text (string) for wp5
         except ValueError:
             return response.text
+# url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# read_url(url)
 
 
 # Waypoint 4: Fetch the List of all the Episodes (update function from waypoint3)
@@ -215,46 +223,75 @@ def build_segment_url_pattern(broadcast_data):
 
 
 # Waypoint 7: Download the Video Segments of an Episodeeeeeeeeeeeeeee
-def download_episode_video_segments(episode, path=None): # create 1 folder path
+def download_episode_video_segments(episode, path=None):
     """
         @param: episode that downloads all the TS video segments of this episode
         @returns: the absolute path and file names of these video segments
                   in the order of the segment indices.
     """
     try:
+        # read the html page of episode
         episode_html_page = fetch_episode_html_page(episode)
+
+        # get the json data of attribute data-broadcast from html page
         broadcast_data = parse_broadcast_data_attribute(episode_html_page)
+
+        # build the sample segment pattern to download
         segment_pattern = build_segment_url_pattern(broadcast_data)
+
+        # segment index
         index = 1
-        response = 200 #
+
+        # list contain downloaded segments
         downloaded_videos = []
-        while response == 200: #
+
+        # start the download loop
+        while True:
+
+            # format index of segment pattern to download
             segment_url = segment_pattern.format(index)
+
+            # create segment file name
             file_name = 'segment_{}_{}.ts'.format(episode.episode_id, index)
-            response = requests.get(segment_url).status_code
+
+            # check if path is input
             if path is not None:
                 path = os.path.expanduser(path) # not testtttt
+
                 # check path exists if not create path
                 if not os.path.isdir(path): # not testtttt
                     os.mkdir(path)
-                des_path = path  + '/' + file_name
+
+            # if path is not input set path = current working directory
             else:
-                des_path = os.getcwd() + '/' + file_name
+                path = os.getcwd()
+
+            # create final file name to download
+            des_path = path  + '/' + file_name
+
+            # download the segment
             urlretrieve(segment_url, des_path)
+
+            # append to list
             downloaded_videos.append(des_path)
+
+            # update index value
             index += 1
+
+    # when there's no more segments to download
     except urllib.error.HTTPError:
         return downloaded_videos
 
 # TEST WP7
 # url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
+# episodes = fetch_episodes(url)
+# episode = episodes[0]
 # print(episode.title)
 # print(eposode.episode_id)
 # print(episode.page_url)
-# episodes = fetch_episodes(url)
-# episode = episodes[0]
-# download all videos and save to folder Music
-# print(download_episode_video_segments(episode))
+# segments = download_episode_video_segments(episode, path='~/Desktop')
+# download in Home ~/ => Desktop, then after Desktop have /bla so create 1 folder
+# print(segments)
 
 
 # Waypoint 8: Build the Final Video of an Episode
