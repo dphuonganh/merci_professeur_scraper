@@ -135,7 +135,7 @@ def read_url(
         except ValueError:
             return response.text
 # url = 'http://www.tv5monde.com/emissions/episodes/merci-professeur.json'
-# read_url(url)
+# print(read_url(url))
 
 
 # Waypoint 4: Fetch the List of all the Episodes (update function from waypoint3)
@@ -196,7 +196,7 @@ def parse_broadcast_data_attribute(html_page):
         @returns: a JSON expression corresponding to the string value of
                   the attribute data-broadcast.
     """
-    # String processing
+    # String processing using regex
     match_string = re.search(r"data-broadcast='([^']*)'", html_page)
     broadcast_data = match_string.group(1)
     return json.loads(broadcast_data)
@@ -219,6 +219,14 @@ def build_segment_url_pattern(broadcast_data):
                   the video segments of this episode.
     """
     broadcast_url = broadcast_data['files'][0]['url']
+# WP10:
+    # if file format is mp4:
+    broadcast_format = broadcast_data['files'][0]['format']
+    if broadcast_format = 'mp4':
+        segment_url = urlparse(broadcast_url)
+        return segment_url.geturl()
+
+    # if file format is m3u8
     head, sep, tail = broadcast_url.partition('csmil/')
     segment_url = urlparse(head + sep + 'segment{}_3_av.ts?null=0')
     return segment_url.geturl()
@@ -252,6 +260,18 @@ def download_episode_video_segments(episode, path=None):
         # build the sample segment pattern to download
         segment_pattern = build_segment_url_pattern(broadcast_data)
 
+        # check if path is input
+        if path is not None:
+            path = os.path.expanduser(path)
+
+            # check path exists if not create path
+            if not os.path.isdir(path):
+                os.mkdir(path)
+
+        # if path is not input set path = current working directory
+        else:
+            path = os.getcwd()
+
         # segment index
         index = 1
 
@@ -264,26 +284,17 @@ def download_episode_video_segments(episode, path=None):
             # format index of segment pattern to download
             segment_url = segment_pattern.format(index)
 
-            # create segment file name
+            # create segment file name if format is m3u8
             file_name = 'segment_{}_{}.ts'.format(episode.episode_id, index)
 
-            # check if path is input
-            if path is not None:
-                path = os.path.expanduser(path) # not testtttt
-
-                # check path exists if not create path
-                if not os.path.isdir(path): # not testtttt
-                    os.mkdir(path)
-
-            # if path is not input set path = current working directory
-            else:
-                path = os.getcwd()
+            # create segment file name if format is mp4
+            if 'mp4' in segment_pattern:
+                file_name = 'segment_{}_{}.mp4'.format(episode.episode_id, index)
 
             # create final file name to download
             des_path = path  + '/' + file_name
 
-# Waypoint 9: blaaaaaaa blaaaaaaaaa blaaaaaaaaa
-
+# Waypoint 9: Implement a Cache Strategy
             # if video segment already downloaded
             if os.path.exists(des_path):
                 print(des_path + ' already downloaded')
@@ -295,6 +306,10 @@ def download_episode_video_segments(episode, path=None):
 
             # append to list
             downloaded_videos.append(des_path)
+
+            # wp10
+            if 'mp4' in segment_pattern:
+                return downloaded_videos
 
             # update index value
             index += 1
@@ -328,6 +343,10 @@ def build_episode_video(episode, segment_file_path_names, path=None):
     # create file name
     file_name = episode.episode_id + '.ts'
 
+    # wp10:
+    if 'mp4' in segment_file_path_names[0]:
+        file_name = episode.episode_id + '.mp4'
+
     # check if path is not input, set path = the directory contain first segment
     if path is None:
        path = os.path.dirname(segment_file_path_names[0])
@@ -341,6 +360,10 @@ def build_episode_video(episode, segment_file_path_names, path=None):
 
     # create final file name combine with path
     file_name = path + '/' + file_name
+
+    # if video already combine
+    if os.path.exists(file_name):
+        return file_name
 
     # create the full video
     final_clip = concatenate_videoclips([VideoFileClip(segment) for segment \
