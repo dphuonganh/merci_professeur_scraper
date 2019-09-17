@@ -133,6 +133,28 @@ For example, with Google Chrome, the developer Web Tool provides a tab to access
 
 You can filter resources that the browser accesses to by entering some keywords. Enter the keyword `segment`. You will see a list of TS files such as `segment1_3_av.ts?null=0`, `segment2_3_av.ts?null=0`, etc.:
 
-![The best thing to hold onto in life is each other.!](1.gif)
+[Transport Stream (TS)](https://en.wikipedia.org/wiki/MPEG_transport_stream) is a standard format specified in MPEG-2 for the transmission and storage of audio, video and data, and commonly used in broadcast systems.
+
+If you click on one particular TS files displayed in the filtered list, you have access to detailed information about this resource, such as its location referenced by the request URL, for example:
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
+>
+> We can manually download this file to watch it:
+>
+> # Download the video file "segment1_3_av.ts".
+$ wget --output-document=segment1_3_av.ts "https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0"
+--2019-08-08 11:22:04--  https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
+Resolving hlstv5mplus-vh.akamaihd.net (hlstv5mplus-vh.akamaihd.net)... 113.171.230.8
+Connecting to hlstv5mplus-vh.akamaihd.net (hlstv5mplus-vh.akamaihd.net)|113.171.230.8|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+> Length: 3165732 (3.0M) [video/MP2T]
+> Saving to: ‘segment1_3_av.ts’
+>
+> segment1_3_av.ts          100%[==================================>]   3.02M  5.87MB/s    in 0.5s
+>
+2019-08-08 11:22:05 (5.87 MB/s) - ‘segment1_3_av.ts’ saved [3165732/3165732]
+> # Display information about this file.
+> $ ls -la segment1_3_av.ts
+> -rw-r--r--@ 1 lythanhphu  student  3165732 Aug  8 11:22 segment1_3_av.ts
 
 
