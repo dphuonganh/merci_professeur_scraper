@@ -26,18 +26,22 @@ This endpoint returns a JSON expression that contains an array of dictionaries, 
 
 We will store the information of an episode in an object.
 
-Write a <Python class> Episode which constructor takes the following parameters in that particular order:
+Write a [Python class](https://www.youtube.com/watch?v=ZDa-Z5JzLYM) `Episode` which constructor takes the following parameters in that particular order:
 
 
 
-title: The title of the episode
+*`title`: The title of the episode
 
-page_url: The Uniform Resource Locator (URL) of the Web page dedicated to this episode
+*`page_url`: The Uniform Resource Locator (URL) of the Web page dedicated to this episode
 
-image_url: The Uniform Resource Locator (URL) of the image (poster) that is shown while the video of the episode is downloading or until the user hits the play button; this is the representative of the episode's video
+*`image_url`: The Uniform Resource Locator (URL) of the image (poster) that is shown while the video of the episode is downloading or until the user hits the play button; this is the representative of the episode's video
 
-broadcasting_date: The date when this episode has been broadcast
+*`broadcasting_date`: The date when this episode has been broadcast
 
 
-Write a static method from_json of this class that takes an argument payload (a JSON expression) and that returns an object Episode.
+Write a [static method](https://realpython.com/instance-class-and-static-methods-demystified/) `from_json` of this [class](https://www.youtube.com/watch?v=apACNr7DC_s) that takes an argument `payload` (a JSON expression) and that returns an object `Episode`.
+
+The class `Episode`'s attributes **MUST** be [private](https://docs.python.org/3.7/tutorial/classes.html#tut-private). They **MUST** be accessible through the [read-only properties](https://www.youtube.com/watch?v=jCzT9XFZ5bw) `title`, `page_url`, `image_url`, and `broadcasting_date`.
+
+Also, the private attribute page_url, corresponding to the URL of the episode's Web page, MUST start with the string "`http://www.tv5monde.com`".
 
