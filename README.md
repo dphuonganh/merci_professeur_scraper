@@ -142,7 +142,7 @@ If you click on one particular TS files displayed in the filtered list, you have
 > We can manually download this file to watch it:
 >
 > # Download the video file "segment1_3_av.ts".
-$ wget --output-document=segment1_3_av.ts "https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0"
+> $ wget --output-document=segment1_3_av.ts "https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0"
 --2019-08-08 11:22:04--  https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
 Resolving hlstv5mplus-vh.akamaihd.net (hlstv5mplus-vh.akamaihd.net)... 113.171.230.8
 Connecting to hlstv5mplus-vh.akamaihd.net (hlstv5mplus-vh.akamaihd.net)|113.171.230.8|:443... connected.
@@ -152,9 +152,48 @@ HTTP request sent, awaiting response... 200 OK
 >
 > segment1_3_av.ts          100%[==================================>]   3.02M  5.87MB/s    in 0.5s
 >
-2019-08-08 11:22:05 (5.87 MB/s) - ‘segment1_3_av.ts’ saved [3165732/3165732]
+> 2019-08-08 11:22:05 (5.87 MB/s) - ‘segment1_3_av.ts’ saved [3165732/3165732]
 > # Display information about this file.
 > $ ls -la segment1_3_av.ts
 > -rw-r--r--@ 1 lythanhphu  student  3165732 Aug  8 11:22 segment1_3_av.ts
 
+You can watch this file with your favorite video reader, such as [VLC media player](https://www.videolan.org/vlc/index.html), a free and open source cross-platform multimedia player. You will then notice that this video is only the first 10 seconds of the episode.
+
+**Video Segments
+
+An episode is actually composed of a list of small TS videos (a [playlist](https://en.wikipedia.org/wiki/M3U)) to be played sequentially. This technique allows a kind of [progressive downloading](https://en.wikipedia.org/wiki/Progressive_download): the user can start to play the episode while the whole video is not completely downloaded.
+
+You may have noticed that the TS videos are not hosted on TV5MONDE (`tv5monde.com`), but on another location (`akamaihd.net`). For instance `hlstv5mplus-vh.akamaihd.net`. These videos are actually hosted on [Akamai](https://en.wikipedia.org/wiki/Akamai_Technologies), a [Content Delivery Network (CDN)](https://en.wikipedia.org/wiki/Content_delivery_network).
+
+Our scraper application will need to download the videos of an episode from Akamai's servers. But what is the URL of each TS segment?
+
+If you watch several episodes and you inspect the network activity, you will find a common pattern of the request URL:
+
+
+* `https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0`
+* `https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0`
+* `https://hlstv5mplus-vh.akamaihd.net/i/hls/9e/4927553_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0`
+* `https://hlstv5mplus-vh.akamaihd.net/i/hls/2b/5257518_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0`
+
+
+The common pattern between the request [URL](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Generic_syntax) to download these TS videos is:
+
+
+* the **scheme** is `HTTPS`
+
+* the **hostname** is `hlstv5mplus-vh.akamaihd.net`
+
+* the **path** starts with `/i/hls`, followed with a magic number (for instance `2b`), followed with the episode identifier, followed with `_,300,700,1400,2100,k.mp4.csmil`
+
+* the TS file name starts with `segment`, followed with the index of the video segment (starting with `1`), followed with `_3_av.ts`
+
+* the query is `null=0`
+
+
+
+We have discovered that the magic number is always the same for the video segments of a same episode, however this magic number is different from one episode to another. So how could we determine the magic number for a specific episode? What is the root file where we should expect to find it? More likely the episode HTML source page itself!
+
+For example:
+
+![Nothing](html_page_source_03.png) (&lt;img /&gt;)
 
