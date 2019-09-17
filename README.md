@@ -133,6 +133,8 @@ For example, with Google Chrome, the developer Web Tool provides a tab to access
 
 You can filter resources that the browser accesses to by entering some keywords. Enter the keyword `segment`. You will see a list of TS files such as `segment1_3_av.ts?null=0`, `segment2_3_av.ts?null=0`, etc.:
 
+![browser_network_analysis.gif](đường dẫn)
+
 [Transport Stream (TS)](https://en.wikipedia.org/wiki/MPEG_transport_stream) is a standard format specified in MPEG-2 for the transmission and storage of audio, video and data, and commonly used in broadcast systems.
 
 If you click on one particular TS files displayed in the filtered list, you have access to detailed information about this resource, such as its location referenced by the request URL, for example:
@@ -195,5 +197,19 @@ We have discovered that the magic number is always the same for the video segmen
 
 For example:
 
-![Nothing](html_page_source_03.png) (&lt;img /&gt;)
+![html_page_source_01 (1).png](html_page_source_03.png)
+
+You **SHOULD** search for the hostname `hlstv5mplus-vh.akamaihd.net`. You will find it is included in a JSON expression similar to:
+
+{
+  "files": [
+    {
+      "format": "m3u8",
+      "url": "https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/master.m3u8"
+    }
+  ],
+  "primary": "html5",
+  "token": false
+}
+
 
