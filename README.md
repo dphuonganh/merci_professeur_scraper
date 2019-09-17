@@ -24,26 +24,20 @@ This endpoint returns a JSON expression that contains an array of dictionaries, 
 
 > curl --silent http://www.tv5monde.com/emissions/episodes/merci-professeur.json | json_pp|
 
-For example, this command returns:
+We will store the information of an episode in an object.
 
-> {
- > "episodes":[
-   > {
-     > "title":"Permaculture",
-     > "url":"\/emissions\/episode\/merci-professeur-permaculture",
-     > "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4927553.jpg",
-     > "date":"Vendredi 2 ao\u00fbt 2019 (redif. du Mercredi 28 f\u00e9vrier 2018)",
-     > "duration":"02:00"
-   > },
-   > {
-     > "title":"On est sur...",
-     > "url":"\/emissions\/episode\/merci-professeur-on-est-sur",
-     > "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4832469.jpg",
-     > "date":"Vendredi 2 ao\u00fbt 2019",
-     > "duration":"02:32"
-   > },
-   > ...
- > ],
- > "numPages":26
- > }
+Write a <Python class> Episode which constructor takes the following parameters in that particular order:
+
+
+
+title: The title of the episode
+
+page_url: The Uniform Resource Locator (URL) of the Web page dedicated to this episode
+
+image_url: The Uniform Resource Locator (URL) of the image (poster) that is shown while the video of the episode is downloading or until the user hits the play button; this is the representative of the episode's video
+
+broadcasting_date: The date when this episode has been broadcast
+
+
+Write a static method from_json of this class that takes an argument payload (a JSON expression) and that returns an object Episode.
 
