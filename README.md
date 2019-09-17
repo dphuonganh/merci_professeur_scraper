@@ -103,4 +103,4 @@ Your function `fetch_episodes` calls this other function `read_url` to read the 
 
 Your application needs to disguise itself, i.e., to fake a browser application that impersonates a real user. Why? Because some Web servers don't allow client applications other than browsers to fetch data from their private API. How do they recognize browsers. They read a special HTTP header, `[User-Agent](https://en.wikipedia.org/wiki/User_agent)`, from the HTTP request they received. If the HTTP header `User-Agent` doesn't reference an accepted browser, the Web server may deny the access to the requested resource.
 
-Your function `read_data_from_url` needs to add an HTTP header `[User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)` with a real browser identification when your function sends the HTTP request to TV5MONDE private API.
+Your function `read_data_from_url` needs to add an HTTP header `[User-Agent]`(https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) with a real browser identification when your function sends the HTTP request to TV5MONDE private API.
