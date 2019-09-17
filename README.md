@@ -105,7 +105,7 @@ Your application needs to disguise itself, i.e., to fake a browser application t
 
 Your function `read_data_from_url` needs to add an HTTP header `[User-Agent]`(https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) with a real browser identification when your function sends the HTTP request to TV5MONDE private API.
 
-**Waypoint 4: Fetch the List of all the Episodes
+# Waypoint 4: Fetch the List of all the Episodes
 
 TV5MONDE's private API doesn't return all the episodes available online in only one request. It only returns a page of episodes.
 
@@ -119,7 +119,7 @@ For example:
 
 Update your function `fetch_episodes` to return all available episodes.
 
-**Waypoint 5: Parse Broadcast Data of an Episode
+# Waypoint 5: Parse Broadcast Data of an Episode
 
 We need now to understand how the [video of an episode](http://www.tv5monde.com/emissions/episode/merci-professeur-kilometre-par-heure) is downloaded by your browser and how it is played.
 
@@ -231,7 +231,7 @@ For example:
 > >>> parse_broadcast_data_attribute(episode_html_page)
 > {'files': [{'format': 'm3u8', 'url': 'https://hlstv5mplus- vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8'}], 'primary': 'html5', 'token': False}
   
-**Waypoint 6: Build a URL Pattern of the Video Segments of an Episode
+# Waypoint 6: Build a URL Pattern of the Video Segments of an Episode
 
 ![mission_impossible_02.jpg]()
 
@@ -292,7 +292,7 @@ For example:
 
 *Note*: you **SHOULD** use the [function `urlparse`](https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlparse) and the [class `ParseResult`](https://docs.python.org/3/library/urllib.parse.html#urllib.parse.ParseResult) to parse the URL provided in the broadcast data of the episode and to build the URL pattern.
 
-**Waypoint 7: Download the Video Segments of an Episode
+# Waypoint 7: Download the Video Segments of an Episode
 
 Write a function `download_episode_video_segments` that takes an argument `episode` (an object Episode), that downloads all the TS video segments of this episode, and returns the absolute path and file names of these video segments in the order of the segment indices.
 
@@ -322,7 +322,7 @@ For example:
 >  Download all the video segments of this episode in our directory
 >  "Movies".
 > >>> download_episode_video_segments(episode, path='~/Movies')
-> ['/home/lythanhphu/Movies/segment_5257520_1.ts', '/home/lythanhphu/Movies/segment_5257520_2.ts', '/home/lythanhphu/Movies/segment_5257520_3.ts', '/home/lythanhphu/Movies/segment_5257520_4.ts', '/home/lythanhphu/Movies/segment_5257520_5.ts', '/home/lythanhphu/Movies/segment_5257520_6.ts', '/home/lythanhphu/Movies/segment_5257520_7.ts', '/home/lythanhphu/Movies/segment_5257520_8.ts', '/home/lythanhphu/Movies/segment_5257520_9.ts', '/home/lythanhphu/Movies/segment_5257520_10.ts', '/home/lythanhphu/Movies/segment_5257520_11.ts', '/home/lythanhphu/Movies/segment_5257520_12.ts', '/home/lythanhphu/Movies/segment_5257520_13.ts']
+> ['/home/lythanhphu/Movies/segment_5257520_1.ts', '/home/lythanhphu/Movies/segment_5257520_2.ts', > '/home/lythanhphu/Movies/segment_5257520_3.ts', '/home/lythanhphu/Movies/segment_5257520_4.ts', > '/home/lythanhphu/Movies/segment_5257520_5.ts', '/home/lythanhphu/Movies/segment_5257520_6.ts', > '/home/lythanhphu/Movies/segment_5257520_7.ts', '/home/lythanhphu/Movies/segment_5257520_8.ts', '/home/lythanhphu/Movies/segment_5257520_9.ts', '/home/lythanhphu/Movies/segment_5257520_10.ts', '/home/lythanhphu/Movies/segment_5257520_11.ts', '/home/lythanhphu/Movies/segment_5257520_12.ts', '/home/lythanhphu/Movies/segment_5257520_13.ts']
 
 There are many techniques you can use to download a file from an HTTP URL:
 
@@ -336,7 +336,7 @@ There are many techniques you can use to download a file from an HTTP URL:
 
 *Note: how do we know how many video segments there are for an episode? We don't initially know this number. We could get this number by reading the M3U8 playlist of the episode; this probably the most generic solution, but it would be longer to implement. We suggest you to simply download video segments, incrementing the index of video segment for ever until your code catches a [HTTP 404 error "Not Found"](https://en.wikipedia.org/wiki/HTTP_404), meaning there is no more video segment.*
 
-**Waypoint 8: Build the Final Video of an Episode
+# Waypoint 8: Build the Final Video of an Episode
 
 ![video_editing.png]()
 
@@ -368,7 +368,7 @@ For example:
 > >>> build_episode_video(episode, segment_file_path_names)
 > '/home/lythanhphu/Movies/5257520.ts'
 
-**Waypoint 9: Implement a Cache Strategy
+# Waypoint 9: Implement a Cache Strategy
 
 You will need to run your script from time to time to download new episodes that TV5MONDE is going to publish. You don't want
 
@@ -376,7 +376,7 @@ However if you run the current version of your script, it downloads the video se
 
 You need to update your code to implement a caching mechanism, meaning that your code doesn't download again and again video segments that have been already downloaded.
 
-**Waypoint 10: Support Downloading of Old Episodes
+# Waypoint 10: Support Downloading of Old Episodes
 
 At this point, you might think you are finished to hack this TV5MONDE video program. Well, not totally.
 
@@ -386,7 +386,7 @@ The reason is that TV5MONDE doesn't use a M38U playlist to stream the video of t
 
 You need to **elegantly** modify your script to support downloading the videos of these older episodes.
 
-**Waypoint 11: Support Episodes with no Representative Image
+# Waypoint 11: Support Episodes with no Representative Image
 
 Since the beginning of this mission, we have made the assumption that every episode has a representative image (cf. attribute image). And we use the URL of this representative image to extract the identification of the corresponding episode. Our code uses the identification of an episode is used to name the video segment files and the final video file of this episode.
 
