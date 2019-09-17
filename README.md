@@ -45,3 +45,26 @@ The class `Episode`'s attributes **MUST** be [private](https://docs.python.org/3
 
 Also, the private attribute page_url, corresponding to the URL of the episode's Web page, MUST start with the string "`http://www.tv5monde.com`".
 
+# Waypoint 2: Retrieve the Identification of an Episode
+
+Each episode is identified with a number.
+
+We have discovered that this identification can be extracted from the URL of the representative image of the episode's video (cf. `image_url`). The file of this image is actually named after the identification of the episode.
+
+For example:
+
+> https://vodhdimg.tv5monde.com/tv5mondeplus/images/5022428.jpg
+
+
+The identification of this episode is 5022428.
+
+You need to:
+
+
+1. Add a private [static method](https://realpython.com/lessons/regular-instance-methods-vs-class-methods-vs-static-methods/) `__parse_episode_id` to the class `Episode` that takes an argument `url` (a string) representing the Uniform Resource Locator of the image of an episode, and that returns the identification of the episode (a string);
+
+2. Update the constructor of the class `Episode` to create an additional private attribute and set its value with the identification of the episode extracted from the URL of the representative image of the episode;
+
+3. Add a read-only [property](https://www.programiz.com/python-programming/property) `episode_id` to the class `Episode` that returns the identification of the episode.
+
+
