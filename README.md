@@ -199,17 +199,235 @@ For example:
 
 ![html_page_source_01 (1).png](html_page_source_03.png)
 
-You **SHOULD** search for the hostname `hlstv5mplus-vh.akamaihd.net`. You will find it is included in a JSON expression similar to:
+You **SHOULD** search for the hostname `hlstv5mplus-vh.akamaihd.net`. You will find it is included in a JSON expression similar to: ...
 
-{
-  "files": [
-    {
-      "format": "m3u8",
-      "url": "https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/master.m3u8"
-    }
-  ],
-  "primary": "html5",
-  "token": false
-}
+Can you see the *magic number* there? Can you actually figure out how you can reuse the given URL to retrieve the video segments of this episode? [Can you see the light](https://www.youtube.com/watch?v=xbq0OuJtErs&feature=youtu.be&t=258)?!
+
+*Hint: Nope?! Don't you see the similarity between the URL of the video segments of the episode and the URL that you can extract from the page source of this episode?*
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
+
+and:
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/master.m3u8
+
+Write a function `fetch_episode_html_page` that takes an argument `episode` (an object `Episode`), and that returns the textual HTML content of the episode page (cf. `page_url`). This function internally calls the function `read_url` to read data (bytes) from the specified URL, and converts these data (encoded in UTF-8) to a string:
+
+Write a function` parse_broadcast_data_attribute` that takes an argument `html_page`, a string corresponding to the source code of the HTML page of an episode, and that returns a JSON expression corresponding to the string value of the attribute `data-broadcast`.
+
+For example:
+
+> # Fetch the list of episodes.
+> >>> episodes = fetch_episodes('http://www.tv5monde.com/emissions/episodes/merci-professeur.json?page={}')
+> >>> len(episodes)
+> 611
+> # Fetch the HTML source page of the first episode of this list.
+> >>> episode = episodes[0]
+> >>> episode.page_url
+> 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
+> >>> episode_html_page = fetch_episode_html_page(episode)
+> '<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8" />\n...'
+> # Parse broadcast information about the episode's video.
+> >>> parse_broadcast_data_attribute(episode_html_page)
+> {'files': [{'format': 'm3u8', 'url': 'https://hlstv5mplus- vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8'}], 'primary': 'html5', 'token': False}
+  
+**Waypoint 6: Build a URL Pattern of the Video Segments of an Episode
+
+![mission_impossible_02.jpg]()
+
+Using the URL provided in the broadcast data that we have extracted in the previous waypoint, we should be able to easily build an URL pattern for accessing the video segments of an episode.
+
+We have inspected the network activity and we have seen that the URLs of the video segments of an episode are almost the same:
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment2_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment3_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment4_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment5_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment6_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment7_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment8_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment9_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment10_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment11_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment12_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment13_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment14_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment15_3_av.ts?null=0
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment16_3_av.ts?null=0
+
+The only difference is that each URL of a video segment contains the index of this video segment, starting from 1. The URL pattern of the video segments of this particular episode is:
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/1b/4832469_,300,700,1400,2100,k.mp4.csmil/segment{}_3_av.ts?null=0
+
+where `{}` could be easily replaced with the index of a video segment using the [string function 'format'](https://docs.python.org/3.7/library/stdtypes.html#str.format).
+
+This URL pattern can be easily built from the broadcast data that our function `parse_broadcast_data_attribute` parses from the HTML source code of an episode, such as for example:
+
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8
+
+Write a function `build_segment_url_pattern` that takes an argument `broadcast_data` (a JSON expression), representing the broadcast data of an episode, and that returns a string representing a URL pattern that references the video segments of this episode.
+
+For example:
+
+> # Fetch the list of episodes.
+> >>> episodes = fetch_episodes('http://www.tv5monde.com/emissions/episodes/merci-professeur.json?page={}')
+> >>> len(episodes)
+> 611
+> # Fetch the HTML source page of the first episode of this list.
+> >>> episode = episodes[0]
+> >>> episode.page_url
+> 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
+> >>> episode_html_page = fetch_episode_html_page(episode)
+> '<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8" />\n...'
+> # Parse broadcast information about the episode's video.
+> >>> broadcast_data = parse_broadcast_data_attribute(episode_html_page)
+> {'files': [{'format': 'm3u8', 'url': 'https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8'}], 'primary': 'html5', 'token': False}
+> >>> segment_url_pattern = build_segment_url_pattern(broadcast_data)
+> >>> print(segment_url_pattern)
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/segment{}_3_av.ts?null=0
+> # Display the URL that references the first video segment.
+> >>> print(segment_url_pattern.format('1'))
+> https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/segment1_
+
+*Note*: you **SHOULD** use the [function `urlparse`](https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlparse) and the [class `ParseResult`](https://docs.python.org/3/library/urllib.parse.html#urllib.parse.ParseResult) to parse the URL provided in the broadcast data of the episode and to build the URL pattern.
+
+**Waypoint 7: Download the Video Segments of an Episode
+
+Write a function `download_episode_video_segments` that takes an argument `episode` (an object Episode), that downloads all the TS video segments of this episode, and returns the absolute path and file names of these video segments in the order of the segment indices.
+
+The function `download_episode_video_segments` accepts an optional argument `path` (a string) that indicates in with directory the video segment files need to be saved into. If not defined, the function saves the video segment files in the current working directory.
+
+The file name of each video segment **MUST** be composed with the following pattern:
+
+> segment_{episode_id}_{segment_index}.ts'
+
+where:
+
+* episode_id: Identification of the episode
+
+* segment_index: Index of the video segment
+
+For example:
+
+> # Let's consider the following episode:
+> >>> episode
+> <__main__.Episode object at 0x1052b2eb8>
+> >>> episode.title
+> 'Trace'
+> >>> episode.episode_id
+> '5257520'
+> >>> episode.page_url
+> 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
+> # Download all the video segments of this episode in our directory
+> # "Movies".
+> >>> download_episode_video_segments(episode, path='~/Movies')
+> ['/home/lythanhphu/Movies/segment_5257520_1.ts', '/home/lythanhphu/Movies/segment_5257520_2.ts', '/home/lythanhphu/Movies/segment_5257520_3.ts', '/home/lythanhphu/Movies/segment_5257520_4.ts', '/home/lythanhphu/Movies/segment_5257520_5.ts', '/home/lythanhphu/Movies/segment_5257520_6.ts', '/home/lythanhphu/Movies/segment_5257520_7.ts', '/home/lythanhphu/Movies/segment_5257520_8.ts', '/home/lythanhphu/Movies/segment_5257520_9.ts', '/home/lythanhphu/Movies/segment_5257520_10.ts', '/home/lythanhphu/Movies/segment_5257520_11.ts', '/home/lythanhphu/Movies/segment_5257520_12.ts', '/home/lythanhphu/Movies/segment_5257520_13.ts']
+
+There are many techniques you can use to download a file from an HTTP URL:
+
+
+* The helper [function `urlretrieve`](https://docs.python.org/3/library/urllib.request.html#urllib.request.urlretrieve) to download each individual video segment file. However, this function doesn't support an option to indicate a timeout to the HTTP request that is performed, meaning that if the request is blocked (for various possible reasons), your script could be blocked for ever. You could set the default timeout for new socket objects with the function, but this should be generally discouraged as it could introduce undesirable side effects in other parts of your application.
+
+* The [function `urlopen`](https://docs.python.org/3/library/urllib.request.html#urllib.request.urlopen) that supports the option `timeout`, which allows to specify a timeout in seconds for blocking operations like the connection attempt;
+
+* The [third-party library `requests`](https://realpython.com/python-requests/), which [function `get`](https://2.python-requests.org/en/master/api/#requests.Request] also supports an option timeout.
+
+
+*Note: how do we know how many video segments there are for an episode? We don't initially know this number. We could get this number by reading the M3U8 playlist of the episode; this probably the most generic solution, but it would be longer to implement. We suggest you to simply download video segments, incrementing the index of video segment for ever until your code catches a [HTTP 404 error "Not Found"](https://en.wikipedia.org/wiki/HTTP_404), meaning there is no more video segment.*
+
+**Waypoint 8: Build the Final Video of an Episode
+
+![video_editing.png]()
+
+Write a `function build_episode_vide`o that takes two arguments `episode` and `segment_file_path_names` where:
+
+* `episode`: An object `Episode`
+
+* `segment_file_path_names`: a list of strings corresponding to absolute path and file names of TS video segments in the order of their index.
+
+The function accepts an optional parameter `path` (a string) that indicates in with directory the episode's video file need to be saved into. If not defined, the function saves the episode video file in the path identified by the first video segment of the list `segment_file_path_names`.
+
+The function assembles all these video segments in one video named after the identification of the episode.
+
+The function returns the absolute path and file name of the episode's video.
+
+For example:
+
+> # Let's consider the following episode:
+> >>> episode
+> <__main__.Episode object at 0x1052b2eb8>
+> >>> episode.title
+> 'Trace'
+> >>> episode.episode_id
+> '5257520'
+> # Download all the video segments of this episode in our directory
+> # "Movies".
+> >>> segment_file_path_names = download_episode_video_segments(episode, path='~/Movies')
+> # Build the final video.
+> >>> build_episode_video(episode, segment_file_path_names)
+> '/home/lythanhphu/Movies/5257520.ts'
+
+**Waypoint 9: Implement a Cache Strategy
+
+You will need to run your script from time to time to download new episodes that TV5MONDE is going to publish. You don't want
+
+However if you run the current version of your script, it downloads the video segments of every episode that it has previously downloaded. This results in a huge waste of time and an amazing useless CPU and network consumption.
+
+You need to update your code to implement a caching mechanism, meaning that your code doesn't download again and again video segments that have been already downloaded.
+
+**Waypoint 10: Support Downloading of Old Episodes
+
+At this point, you might think you are finished to hack this TV5MONDE video program. Well, not totally.
+
+Your script should work perfectly fine for almost all the episodes that have been published recently, minus some errors from TV5MONDE side. However, the current version of your script may no be able to download the videos of episodes that have been published in 2014.
+
+The reason is that TV5MONDE doesn't use a M38U playlist to stream the video of these old episodes, but a single [MPEG-4](https://en.wikipedia.org/wiki/MPEG-4) video file per episode. If you closely inspect the broadcast data from the source code of an episode's Web page, you will notice that the format is not "`m3u8`" but "`mp4`", and the URL doesn't refer to a M38U playlist (that ultimately references other TS video segment files) but a MPEG-4 file.
+
+You need to **elegantly** modify your script to support downloading the videos of these older episodes.
+
+**Waypoint 11: Support Episodes with no Representative Image
+
+Since the beginning of this mission, we have made the assumption that every episode has a representative image (cf. attribute image). And we use the URL of this representative image to extract the identification of the corresponding episode. Our code uses the identification of an episode is used to name the video segment files and the final video file of this episode.
+
+
+**Problem
+
+Unfortunately, we have discovered that a few episodes don't have representative image.
+
+The current version of our code badly handles this situation. The static method `__parse_episode_id` of the class `Episode` that we have developed in the waypoint #2, returns an empty string as the identification of an episode with no representative image (or raises an exception). Without episode identification, our code cannot correctly saves the video segment files and the final video file of these episodes.
+
+We could more surely retrieve the identification of the episode from the broadcast data of an episode, would this episode be split in several video segments or would this episode composed of only one MPEG-4 video file..
+
+The problem with this solution is that it breaks our cache mechanism (cf. waypoint #9). Our cache mechanism allows our code to only fetch the list of episodes from TV5MONDE private API and to immediately detect which episodes has been already downloaded, which new episodes need to be downloaded. It's efficient. It's fast.
+
+If we need to read the Web page of each episode and extract the broadcast data of this episode in order to retrieve the identification of this episode, and to decide whether we need to download or not the video files of this episode, our script would be very slow.
+
+How can we fix this issue?Pragmatic Solution
+
+**Pragmatic Solution
+
+We can decide to generate a key to uniquely identify episodes. This key has to be generated from the data directly fetched from TV5MONDE private API, so no other request is required to take the decision whether we need to download the video files of an episode, or whether we need to skip this episode as we have already downloaded it.
+
+An episode **always** has a dedicated Web page (cf. attribute `url`). This Web page is unique for each episode:
+
+We can use this URL (actually a path) to generate a dedicated unique key for this episode. We will use the [MD5 message-digest algorithm](https://en.wikipedia.org/wiki/MD5) to produce a hash value of the episode's URL. We will use the [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) representation of this hash to name the episode's video files.
+
+For example, the path of the dedicated Web page of the episode "Tomate (et patate)" is "`/emissions/episode/merci-professeur-tomate-et-patate`". The [MD5](https://www.md5online.org/) hash value of this path is `caa8efbaaae3bb32cbd14a9ff6d73c63`.
+
+We will replace in our code the way we name the video files of an episode, from the identification of the episode to this hash value.
+
+You need to:
+
+1. Add a private static method `__generate_key` to the class `Episode`, that takes an argument `s` (a string) and that returns a string representing the [MD5 hexadecimal hash value](https://docs.python.org/3/library/hashlib.html) of this argument `s`;
+
+2. Update the constructor of the class `Episode` to create an additional private attribute and set its value with the hexadecimal hash value of the episode built from the URL (path only) of the Web page of the episode;
+
+3. Add a read-only [property](https://www.programiz.com/python-programming/property) `key` to the class `Episode` that returns the unique key of the episode.
+
+Then you need to refactor your code to name the video files of an episode with the key of this episode.
+
+
+
 
 
