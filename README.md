@@ -22,6 +22,4 @@ The URL of this endpoint is: http://www.tv5monde.com/emissions/episodes/merci-pr
 
 This endpoint returns a JSON expression that contains an array of dictionaries, each dictionary corresponds to the information of an episode. We can discover the structure of the response returned by this API's endpoint with the following Shell command:
 
-|-------------------------------------------------------------------------------------------|
-| curl --silent http://www.tv5monde.com/emissions/episodes/merci-professeur.json | json_pp| |
-|-------------------------------------------------------------------------------------------|
+> curl --silent http://www.tv5monde.com/emissions/episodes/merci-professeur.json | json_pp|
