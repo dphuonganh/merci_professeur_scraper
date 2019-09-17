@@ -45,7 +45,7 @@ The class `Episode`'s attributes **MUST** be [private](https://docs.python.org/3
 
 Also, the private attribute page_url, corresponding to the URL of the episode's Web page, MUST start with the string "`http://www.tv5monde.com`".
 
-# Waypoint 2: Retrieve the Identification of an Episode
+# Waypoint 2: Retrieve the Identification of an Episode(https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)
 
 Each episode is identified with a number.
 
@@ -101,6 +101,38 @@ Your function `fetch_episodes` calls this other function `read_url` to read the 
 
 **Spoofing Browser Identity**
 
-Your application needs to disguise itself, i.e., to fake a browser application that impersonates a real user. Why? Because some Web servers don't allow client applications other than browsers to fetch data from their private API. How do they recognize browsers. They read a special HTTP header, `[User-Agent](https://en.wikipedia.org/wiki/User_agent)`, from the HTTP request they received. If the HTTP header `User-Agent` doesn't reference an accepted browser, the Web server may deny the access to the requested resource.
+Your application needs to disguise itself, i.e., to fake a browser application that impersonates a real user. Why? Because some Web servers don't allow client applications other than browsers to fetch data from their private API. How do they recognize browsers. They read a special HTTP header, `[User-Agent]`(https://en.wikipedia.org/wiki/User_agent), from the HTTP request they received. If the HTTP header `User-Agent` doesn't reference an accepted browser, the Web server may deny the access to the requested resource.
 
 Your function `read_data_from_url` needs to add an HTTP header `[User-Agent]`(https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) with a real browser identification when your function sends the HTTP request to TV5MONDE private API.
+
+**Waypoint 4: Fetch the List of all the Episodes
+
+TV5MONDE's private API doesn't return all the episodes available online in only one request. It only returns a page of episodes.
+
+How to fetch all the episodes? TV5MONDE's private API supports [pagination](https://www.moesif.com/blog/technical/api-design/REST-API-Design-Filtering-Sorting-and-Pagination/#). You may have noticed that the JSON expression, returned by TV5MONDE private API, contains an attribute `numPages` that indicates the number of pages.
+
+The endpoint of this API supports a query parameter `page` that allows the caller to indicate the index of the page to return episodes from. This index starts with `1`. By default, when not defined, the page index value is `1`.
+
+For example:
+
+> curl --silent http://www.tv5monde.com/emissions/episodes/merci-professeur.json?page=2 | json_pp
+
+Update your function `fetch_episodes` to return all available episodes.
+
+**Waypoint 5: Parse Broadcast Data of an Episode
+
+We need now to understand how the [video of an episode](http://www.tv5monde.com/emissions/episode/merci-professeur-kilometre-par-heure) is downloaded by your browser and how it is played.
+
+For that you need to open the [page of an episode](http://www.tv5monde.com/emissions/), to click on the [High Definition (HD) video option](https://en.wikipedia.org/wiki/High-definition_video), and to inspect network activity between your browser and TV5MONDE Web site.
+
+**Developer Tools: Network Activity
+
+You need to access the Developer Tools of your browser. Most of the browsers, such as [Chrome](https://developers.google.com/web/tools/chrome-devtools/) and [FireFox](https://developer.mozilla.org/en-US/docs/Tools), support a set of tools that help developers edit pages on-the-fly and diagnose problems quickly.
+
+For example, with Google Chrome, the developer Web Tool provides a tab to access [network activity](https://www.youtube.com/watch?time_continue=6&v=e1gAyQuIFQo).
+
+You can filter resources that the browser accesses to by entering some keywords. Enter the keyword `segment`. You will see a list of TS files such as `segment1_3_av.ts?null=0`, `segment2_3_av.ts?null=0`, etc.:
+
+![The best thing to hold onto in life is each other.!](1.gif)
+
+
