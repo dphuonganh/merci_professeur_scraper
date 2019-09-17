@@ -67,4 +67,40 @@ You need to:
 
 3. Add a read-only [property](https://www.programiz.com/python-programming/property) `episode_id` to the class `Episode` that returns the identification of the episode.
 
+# Waypoint 3: Fetch the List of Episodes
 
+Now that we have a class `Episode`, we can easily instantiate objects by providing JSON expressions representing episodes.
+
+You will need to write a function `fetch_episodes` that takes an argument `url` (a string) that corresponds to the Uniform Resource Locator (URL) of the TV5MONDE's endpoint which allows to get the list of episodes.
+
+The function sends a HTTP `GET` request to the specified TV5MONDE's private API, reads the JSON data returned by this endpoint, and returns a list of objects `Episode`.
+
+There are a few points you need to consider that we present hereafter.
+
+# Permanent and Temporary Errors Management
+
+When connecting to a machine through the Internet, and sending and retrieving data to and from a remote machine, your definitively **MUST** expect to face a couple of issues:
+
+
+* network issue: your machine or the remote machine is not currently connected to the Internet, the remote machine is not accessible because of various possible failures between your machine and this remote machine (DNS, router, firewall, switch, etc.);
+
+* machine issue: the remote machine is down, its network interface is down, etc.
+
+* application issue: the Web sever application of this machine is down or it is not responding, the resource specified in your HTTP request does not exist or its access is not allowed, etc.
+
+
+You **MUST** distinguish permanent errors (resource is [not found](https://en.wikipedia.org/wiki/HTTP_404), its access is [not forbidden](https://en.wikipedia.org/wiki/HTTP_403), etc.), from temporary errors (connectivity issue, [server](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_Server_errors) issues). Temporary errors are recoverable. Permanent errors are not. In case of temporary errors, your code SHOULD try to reattempt the same request some times later.
+
+**Separation of Concerns (SoC)**
+
+You **SHOULD** definitively write the code that handles the HTTP request to the endpoint specified by an in a separate function. This is the [Separation of Concerns (SoC)](https://en.wikipedia.org/wiki/Separation_of_concerns) principle: each function addresses on one and only one concern. This principle allows better modularity and maintainability of your code.
+
+You **SHOULD** write a function `read_url` that takes an argument `url` (a string), that performs the HTTP request to the specified endpoint, and that returns the data read contained in the HTTP response. This function **SHOULD** reattempts a certain number of times to connect and read data from the specified URL when temporary errors occur.
+
+Your function `fetch_episodes` calls this other function `read_url` to read the JSON expression representing a list of episodes fetched from the TV5MONDE's private API.
+
+**Spoofing Browser Identity**
+
+Your application needs to disguise itself, i.e., to fake a browser application that impersonates a real user. Why? Because some Web servers don't allow client applications other than browsers to fetch data from their private API. How do they recognize browsers. They read a special HTTP header, `[User-Agent](https://en.wikipedia.org/wiki/User_agent)`, from the HTTP request they received. If the HTTP header `User-Agent` doesn't reference an accepted browser, the Web server may deny the access to the requested resource.
+
+Your function `read_data_from_url` needs to add an HTTP header `[User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)` with a real browser identification when your function sends the HTTP request to TV5MONDE private API.
