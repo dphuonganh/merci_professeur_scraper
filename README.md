@@ -27,23 +27,23 @@ This endpoint returns a JSON expression that contains an array of dictionaries, 
 For example, this command returns:
 
 > {
-> "episodes":[
->   {
->     "title":"Permaculture",
->     "url":"\/emissions\/episode\/merci-professeur-permaculture",
->     "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4927553.jpg",
->     "date":"Vendredi 2 ao\u00fbt 2019 (redif. du Mercredi 28 f\u00e9vrier 2018)",
->     "duration":"02:00"
->   },
->   {
->     "title":"On est sur...",
->     "url":"\/emissions\/episode\/merci-professeur-on-est-sur",
->     "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4832469.jpg",
->     "date":"Vendredi 2 ao\u00fbt 2019",
->     "duration":"02:32"
->   },
->   ...
-> ],
-> "numPages":26
-> }
+ > "episodes":[
+   > {
+     > "title":"Permaculture",
+     > "url":"\/emissions\/episode\/merci-professeur-permaculture",
+     > "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4927553.jpg",
+     > "date":"Vendredi 2 ao\u00fbt 2019 (redif. du Mercredi 28 f\u00e9vrier 2018)",
+     > "duration":"02:00"
+   > },
+   > {
+     > "title":"On est sur...",
+     > "url":"\/emissions\/episode\/merci-professeur-on-est-sur",
+     > "image":"https:\/\/vodhdimg.tv5monde.com\/tv5mondeplus\/images\/4832469.jpg",
+     > "date":"Vendredi 2 ao\u00fbt 2019",
+     > "duration":"02:32"
+   > },
+   > ...
+ > ],
+ > "numPages":26
+ > }
 
