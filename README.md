@@ -143,7 +143,7 @@ If you click on one particular TS files displayed in the filtered list, you have
 >
 > We can manually download this file to watch it:
 >
-> # Download the video file "segment1_3_av.ts".
+>  Download the video file "segment1_3_av.ts".
 > $ wget --output-document=segment1_3_av.ts "https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0"
 --2019-08-08 11:22:04--  https://hlstv5mplus-vh.akamaihd.net/i/hls/61/5022428_,300,700,1400,2100,k.mp4.csmil/segment1_3_av.ts?null=0
 Resolving hlstv5mplus-vh.akamaihd.net (hlstv5mplus-vh.akamaihd.net)... 113.171.230.8
@@ -155,7 +155,7 @@ HTTP request sent, awaiting response... 200 OK
 > segment1_3_av.ts          100%[==================================>]   3.02M  5.87MB/s    in 0.5s
 >
 > 2019-08-08 11:22:05 (5.87 MB/s) - ‘segment1_3_av.ts’ saved [3165732/3165732]
-> # Display information about this file.
+>  Display information about this file.
 > $ ls -la segment1_3_av.ts
 > -rw-r--r--@ 1 lythanhphu  student  3165732 Aug  8 11:22 segment1_3_av.ts
 
@@ -217,17 +217,17 @@ Write a function` parse_broadcast_data_attribute` that takes an argument `html_p
 
 For example:
 
-> # Fetch the list of episodes.
+>  Fetch the list of episodes.
 > >>> episodes = fetch_episodes('http://www.tv5monde.com/emissions/episodes/merci-professeur.json?page={}')
 > >>> len(episodes)
 > 611
-> # Fetch the HTML source page of the first episode of this list.
+>  Fetch the HTML source page of the first episode of this list.
 > >>> episode = episodes[0]
 > >>> episode.page_url
 > 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
 > >>> episode_html_page = fetch_episode_html_page(episode)
 > '<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8" />\n...'
-> # Parse broadcast information about the episode's video.
+>  Parse broadcast information about the episode's video.
 > >>> parse_broadcast_data_attribute(episode_html_page)
 > {'files': [{'format': 'm3u8', 'url': 'https://hlstv5mplus- vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8'}], 'primary': 'html5', 'token': False}
   
@@ -270,23 +270,23 @@ Write a function `build_segment_url_pattern` that takes an argument `broadcast_d
 
 For example:
 
-> # Fetch the list of episodes.
+>  Fetch the list of episodes.
 > >>> episodes = fetch_episodes('http://www.tv5monde.com/emissions/episodes/merci-professeur.json?page={}')
 > >>> len(episodes)
 > 611
-> # Fetch the HTML source page of the first episode of this list.
+>  Fetch the HTML source page of the first episode of this list.
 > >>> episode = episodes[0]
 > >>> episode.page_url
 > 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
 > >>> episode_html_page = fetch_episode_html_page(episode)
 > '<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8" />\n...'
-> # Parse broadcast information about the episode's video.
+>  Parse broadcast information about the episode's video.
 > >>> broadcast_data = parse_broadcast_data_attribute(episode_html_page)
 > {'files': [{'format': 'm3u8', 'url': 'https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/master.m3u8'}], 'primary': 'html5', 'token': False}
 > >>> segment_url_pattern = build_segment_url_pattern(broadcast_data)
 > >>> print(segment_url_pattern)
 > https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/segment{}_3_av.ts?null=0
-> # Display the URL that references the first video segment.
+>  Display the URL that references the first video segment.
 > >>> print(segment_url_pattern.format('1'))
 > https://hlstv5mplus-vh.akamaihd.net/i/hls/73/5257520_,300,700,1400,2100,k.mp4.csmil/segment1_
 
@@ -310,7 +310,7 @@ where:
 
 For example:
 
-> # Let's consider the following episode:
+>  Let's consider the following episode:
 > >>> episode
 > <__main__.Episode object at 0x1052b2eb8>
 > >>> episode.title
@@ -319,8 +319,8 @@ For example:
 > '5257520'
 > >>> episode.page_url
 > 'http://www.tv5monde.com/emissions/episode/merci-professeur-trace'
-> # Download all the video segments of this episode in our directory
-> # "Movies".
+>  Download all the video segments of this episode in our directory
+>  "Movies".
 > >>> download_episode_video_segments(episode, path='~/Movies')
 > ['/home/lythanhphu/Movies/segment_5257520_1.ts', '/home/lythanhphu/Movies/segment_5257520_2.ts', '/home/lythanhphu/Movies/segment_5257520_3.ts', '/home/lythanhphu/Movies/segment_5257520_4.ts', '/home/lythanhphu/Movies/segment_5257520_5.ts', '/home/lythanhphu/Movies/segment_5257520_6.ts', '/home/lythanhphu/Movies/segment_5257520_7.ts', '/home/lythanhphu/Movies/segment_5257520_8.ts', '/home/lythanhphu/Movies/segment_5257520_9.ts', '/home/lythanhphu/Movies/segment_5257520_10.ts', '/home/lythanhphu/Movies/segment_5257520_11.ts', '/home/lythanhphu/Movies/segment_5257520_12.ts', '/home/lythanhphu/Movies/segment_5257520_13.ts']
 
@@ -354,17 +354,17 @@ The function returns the absolute path and file name of the episode's video.
 
 For example:
 
-> # Let's consider the following episode:
+>  Let's consider the following episode:
 > >>> episode
 > <__main__.Episode object at 0x1052b2eb8>
 > >>> episode.title
 > 'Trace'
 > >>> episode.episode_id
 > '5257520'
-> # Download all the video segments of this episode in our directory
-> # "Movies".
+>  Download all the video segments of this episode in our directory
+>  "Movies".
 > >>> segment_file_path_names = download_episode_video_segments(episode, path='~/Movies')
-> # Build the final video.
+>  Build the final video.
 > >>> build_episode_video(episode, segment_file_path_names)
 > '/home/lythanhphu/Movies/5257520.ts'
 
